@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Lumina — Crafted for the Future</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --black: #050505;
+  --white: #f8f6f2;
+  --cream: #f0ece4;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --muted: #8a8680;
+  --surface: #0e0d0b;
+  --surface2: #161410;
+  --border: rgba(201,168,76,0.15);
+  --radius: 16px;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── CURSOR ─── */
+.cursor {
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(201,168,76,0.5);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9998;
+  transition: width 0.3s, height 0.3s, opacity 0.3s;
+}
+@media (hover: none) { .cursor, .cursor-ring { display: none; } }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 100;
+  padding: 0 48px;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(5,5,5,0.6);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+}
+.nav-links { display: flex; gap: 40px; }
+.nav-links a {
+  font-size: 13px; font-weight: 400;
+  color: var(--muted); text-decoration: none;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  transition: color 0.25s;
+  padding: 8px 0;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--black); background: var(--gold);
+  border: none; border-radius: 2px;
+  padding: 10px 24px; cursor: pointer;
+  transition: background 0.25s, transform 0.2s;
+  touch-action: manipulation;
+}
+.nav-btn:hover { background: var(--gold-light); }
+.nav-btn:active { transform: scale(0.97); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100svh;
+  display: grid; place-items: center;
+  text-align: center;
+  padding: 100px 24px 80px;
+  position: relative; overflow: hidden;
+}
+
+.hero-noise {
+  position: absolute; inset: 0; opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.hero-orb {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 65%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  animation: breathe 8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes breathe {
+  0%,100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 32px;
+  animation: riseIn 1s ease both;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; width: 32px; height: 1px; background: var(--gold); opacity: 0.5;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(60px, 10vw, 130px);
+  font-weight: 300; line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  margin-bottom: 32px;
+  animation: riseIn 1s ease 0.15s both;
+}
+.hero-title em {
+  font-style: italic; color: var(--gold);
+  font-weight: 300;
+}
+
+.hero-desc {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--muted); line-height: 1.7; font-weight: 300;
+  max-width: 520px; margin: 0 auto 52px;
+  animation: riseIn 1s ease 0.25s both;
+}
+
+.hero-actions {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  animation: riseIn 1s ease 0.35s both;
+}
+
+.btn-gold {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--black); background: var(--gold);
+  border: none; border-radius: 2px;
+  padding: 16px 40px; cursor: pointer;
+  text-decoration: none; display: inline-block;
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  touch-action: manipulation;
+}
+.btn-gold:hover { background: var(--gold-light); box-shadow: 0 12px 40px rgba(201,168,76,0.25); }
+.btn-gold:active { transform: scale(0.97); }
+
+.btn-ghost {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--white); background: transparent;
+  border: 1px solid rgba(248,246,242,0.2); border-radius: 2px;
+  padding: 16px 40px; cursor: pointer;
+  text-decoration: none; display: inline-block;
+  transition: border-color 0.25s, background 0.25s, transform 0.2s;
+  touch-action: manipulation;
+}
+.btn-ghost:hover { border-color: rgba(248,246,242,0.5); background: rgba(248,246,242,0.04); }
+.btn-ghost:active { transform: scale(0.97); }
+
+.hero-scroll {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+  animation: riseIn 1s ease 0.6s both;
+}
+.scroll-line {
+  width: 1px; height: 48px; background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { opacity: 0.4; } 50% { opacity: 1; }
+}
+
+/* ─── MARQUEE ─── */
+.marquee-wrap {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden; padding: 18px 0;
+  background: var(--surface);
+}
+.marquee-track {
+  display: flex; gap: 64px; width: max-content;
+  animation: marquee 30s linear infinite;
+}
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-item {
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap;
+  display: flex; align-items: center; gap: 24px;
+}
+.marquee-item::after { content: '✦'; color: var(--gold); font-size: 8px; }
+
+/* ─── SECTION BASE ─── */
+.section { padding: 120px 48px; max-width: 1280px; margin: 0 auto; }
+.section-label {
+  font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 20px;
+}
+.section-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(40px, 6vw, 76px);
+  font-weight: 300; letter-spacing: -0.02em; line-height: 1.05;
+  margin-bottom: 72px;
+}
+.section-heading em { font-style: italic; color: var(--gold); }
+
+/* ─── PRODUCT GRID ─── */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2px;
+}
+
+.product-card {
+  background: var(--surface);
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: border-color 0.4s, transform 0.2s;
+  touch-action: manipulation;
+}
+.product-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(201,168,76,0.06), transparent);
+  opacity: 0; transition: opacity 0.4s; z-index: 1;
+}
+.product-card:hover { border-color: rgba(201,168,76,0.4); }
+.product-card:hover::before { opacity: 1; }
+.product-card:hover .card-img { transform: scale(1.04); }
+.product-card:hover .card-arrow { opacity: 1; transform: translate(4px, -4px); }
+.product-card:active { transform: scale(0.99); }
+
+.card-img-wrap {
+  width: 100%; aspect-ratio: 4/3; overflow: hidden;
+  position: relative; background: var(--surface2);
+}
+.card-img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: block;
+}
+.card-img-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 64px;
+  background: linear-gradient(135deg, var(--surface2), var(--surface));
+}
+
+.card-tag {
+  position: absolute; top: 20px; left: 20px; z-index: 2;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 1px; font-weight: 500;
+}
+.tag-new { background: var(--gold); color: var(--black); }
+.tag-sale { background: #c0392b; color: #fff; }
+.tag-hot { background: #8e44ad; color: #fff; }
+
+.card-body { padding: 28px 28px 32px; position: relative; z-index: 2; }
+.card-cat {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+}
+.card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 400; letter-spacing: -0.01em;
+  margin-bottom: 10px; line-height: 1.1;
+}
+.card-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+.card-footer { display: flex; align-items: flex-end; justify-content: space-between; }
+.price-wrap { display: flex; align-items: baseline; gap: 10px; }
+.card-price { font-size: 22px; font-weight: 400; color: var(--gold); letter-spacing: -0.01em; }
+.card-price-old { font-size: 14px; color: var(--muted); text-decoration: line-through; }
+.card-arrow {
+  font-size: 18px; color: var(--gold);
+  opacity: 0; transition: all 0.3s;
+}
+
+/* ─── FEATURED BANNER ─── */
+.featured {
+  display: grid; grid-template-columns: 1fr 1fr; min-height: 560px;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.featured-text {
+  padding: 80px 72px;
+  display: flex; flex-direction: column; justify-content: center;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+.featured-eyebrow {
+  font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 24px;
+}
+.featured-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(40px, 5vw, 64px); font-weight: 300;
+  letter-spacing: -0.02em; line-height: 1.0; margin-bottom: 24px;
+}
+.featured-title em { font-style: italic; color: var(--gold); }
+.featured-body { font-size: 15px; color: var(--muted); line-height: 1.8; margin-bottom: 40px; max-width: 420px; }
+.featured-img-wrap { overflow: hidden; position: relative; }
+.featured-img {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block; filter: brightness(0.85);
+  transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.4s;
+}
+.featured:hover .featured-img { transform: scale(1.03); filter: brightness(0.95); }
+
+/* ─── STATS ─── */
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--border);
+}
+.stat-item {
+  padding: 60px 40px; border-right: 1px solid var(--border);
+  text-align: center;
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 64px; font-weight: 300; color: var(--gold);
+  letter-spacing: -0.03em; line-height: 1;
+  margin-bottom: 10px;
+}
+.stat-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+/* ─── FEATURES GRID ─── */
+.features-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  border: 1px solid var(--border);
+}
+.feature-card {
+  padding: 48px 40px; background: var(--surface);
+  border-right: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.feature-card:last-child { border-right: none; }
+.feature-card:hover { background: var(--surface2); }
+.feature-icon {
+  width: 44px; height: 44px; margin-bottom: 28px;
+  border: 1px solid var(--border); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.feature-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 400; margin-bottom: 14px; letter-spacing: -0.01em;
+}
+.feature-body { font-size: 13px; color: var(--muted); line-height: 1.8; }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 80px 48px 48px;
+}
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 60px; margin-bottom: 64px;
+}
+.footer-brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 300; color: var(--gold);
+  letter-spacing: 0.05em; margin-bottom: 16px;
+}
+.footer-brand-desc { font-size: 13px; color: var(--muted); line-height: 1.8; max-width: 280px; }
+.footer-col h5 {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px;
+}
+.footer-col a {
+  display: block; font-size: 14px; color: rgba(248,246,242,0.6);
+  text-decoration: none; margin-bottom: 12px;
+  transition: color 0.2s; padding: 4px 0;
+}
+.footer-col a:hover { color: var(--white); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
+.footer-socials { display: flex; gap: 24px; }
+.footer-socials a {
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color 0.2s;
+  padding: 8px 0;
+}
+.footer-socials a:hover { color: var(--gold); }
+
+/* ─── REVEAL ─── */
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.reveal.in { opacity: 1; transform: none; }
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .section { padding: 80px 24px; }
+  .featured { grid-template-columns: 1fr; }
+  .featured-text { padding: 56px 32px; border-right: none; border-bottom: 1px solid var(--border); }
+  .featured-img-wrap { min-height: 300px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feature-card { border-right: none; border-bottom: 1px solid var(--border); }
+  .feature-card:last-child { border-bottom: none; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stat-item:nth-child(2) { border-right: none; }
+  .stat-item:nth-child(3) { border-right: 1px solid var(--border); }
+  .stat-item:nth-child(3), .stat-item:nth-child(4) { border-top: 1px solid var(--border); }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+
+@media (max-width: 540px) {
+  .product-grid { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .footer-top { grid-template-columns: 1fr; }
+  .hero-title { font-size: clamp(52px, 14vw, 80px); }
+  .footer-socials { flex-wrap: wrap; justify-content: center; gap: 16px; }
+  .section { padding: 60px 20px; }
+  footer { padding: 60px 24px 40px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">LUMINA</div>
+  <div class="nav-links">
+    <a href="#collection">Collection</a>
+    <a href="#story">Story</a>
+    <a href="#craft">Craft</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button class="nav-btn" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-orb"></div>
+  <div>
+    <div class="hero-eyebrow">New Collection 2026</div>
+    <h1 class="hero-title">Designed for<br><em>Those Who</em><br>Notice.</h1>
+    <p class="hero-desc">Technology and artistry, perfectly balanced. Every product we craft is a statement — refined, purposeful, and built to last a lifetime.</p>
+    <div class="hero-actions">
+      <a href="#collection" class="btn-gold">Explore Collection</a>
+      <a href="#story" class="btn-ghost">Our Story</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- COLLECTION -->
+<section id="collection">
+  <div class="section reveal">
+    <div class="section-label">Our Collection</div>
+    <h2 class="section-heading">Crafted with<br><em>Intention</em></h2>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- FEATURED BANNER -->
+<div class="featured reveal" id="story">
+  <div class="featured-text">
+    <div class="featured-eyebrow">Signature Series</div>
+    <h2 class="featured-title">The Future<br>of <em>Design</em></h2>
+    <p class="featured-body">Our flagship line pushes the boundaries of what's possible — where engineering precision meets timeless aesthetic. Fewer, better things.</p>
+    <a href="#collection" class="btn-gold">Discover More</a>
+  </div>
+  <div class="featured-img-wrap">
+    <img class="featured-img"
+      src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=900&q=85&auto=format&fit=crop"
+      alt="Featured product" loading="lazy"
+      onerror="this.style.background='var(--surface2)';this.style.minHeight='400px'">
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="section reveal" style="padding-top:80px;padding-bottom:80px">
+  <div class="stats">
+    <div class="stat-item"><div class="stat-num">12+</div><div class="stat-label">Years of Craft</div></div>
+    <div class="stat-item"><div class="stat-num">98%</div><div class="stat-label">Satisfaction</div></div>
+    <div class="stat-item"><div class="stat-num">240K</div><div class="stat-label">Delivered</div></div>
+    <div class="stat-item"><div class="stat-num">3yr</div><div class="stat-label">Warranty</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="craft">
+  <div class="section reveal">
+    <div class="section-label">Why Lumina</div>
+    <h2 class="section-heading">The <em>Details</em><br>Define Us</h2>
+    <div class="features-grid" id="featuresGrid"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">LUMINA</div>
+      <p class="footer-brand-desc">Crafting objects of quiet excellence since 2014. Designed in-house. Built to endure.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Shop</h5>
+      <a href="#">All Products</a>
+      <a href="#">New Arrivals</a>
+      <a href="#">Best Sellers</a>
+      <a href="#">Sale</a>
+    </div>
+    <div class="footer-col">
+      <h5>Support</h5>
+      <a href="#">Help Center</a>
+      <a href="#">Returns</a>
+      <a href="#">Track Order</a>
+      <a href="#">Warranty</a>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="#">About Us</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Lumina. All rights reserved.</div>
+    <div class="footer-socials">
+      <a href="#">Instagram</a>
+      <a href="#">Twitter</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">YouTube</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════
+   ✅ ADD NEW PRODUCTS — add a new object to this array.
+   img      → image URL (Unsplash or any URL)
+   fallback → emoji if image fails
+   category → label above the name
+   name     → product name
+   desc     → short description
+   price    → display price string
+   oldPrice → struck-through price (null = hide)
+   tag      → "new" | "sale" | "hot" | null
+   tagText  → badge label text
+════════════════════════════════════════════════════ */
+const products = [
+  {
+    img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700&q=80&auto=format&fit=crop",
+    fallback: "📱",
+    category: "Smartphone",
+    name: "PhoneX Pro",
+    desc: "A camera system that sees like the human eye. Battery that outlasts your day. Always.",
+    price: "$1,199", oldPrice: "$1,399",
+    tag: "sale", tagText: "Sale"
+  },
+  {
+    img: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=700&q=80&auto=format&fit=crop",
+    fallback: "💻",
+    category: "Laptop",
+    name: "BookAir Ultra",
+    desc: "Impossibly thin. Unreasonably fast. The machine that disappears so your ideas can shine.",
+    price: "$1,799", oldPrice: null,
+    tag: "new", tagText: "New"
+  },
+  {
+    img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700&q=80&auto=format&fit=crop",
+    fallback: "🎧",
+    category: "Audio",
+    name: "SoundPods Max",
+    desc: "Industry-defining noise cancellation. Studio-grade audio. Silence the world, hear everything.",
+    price: "$349", oldPrice: null,
+    tag: "hot", tagText: "Popular"
+  },
+  {
+    img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=80&auto=format&fit=crop",
+    fallback: "⌚",
+    category: "Wearable",
+    name: "WatchSeries 10",
+    desc: "Health tracking. GPS precision. ECG monitoring. Your most personal device, perfected.",
+    price: "$549", oldPrice: "$649",
+    tag: "sale", tagText: "Sale"
+  },
+  {
+    img: "https://images.unsplash.com/photo-1593640408182-31c228f74f2e?w=700&q=80&auto=format&fit=crop",
+    fallback: "📺",
+    category: "Display",
+    name: "VisionPro 4K",
+    desc: "Every pixel crafted for truth. 4K OLED with HDR10+ — the display you'll never leave.",
+    price: "$899", oldPrice: null,
+    tag: "new", tagText: "New"
+  },
+  {
+    img: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=700&q=80&auto=format&fit=crop",
+    fallback: "🎮",
+    category: "Gaming",
+    name: "GamePad Pro",
+    desc: "Haptic feedback that reacts in microseconds. 40-hour battery. Built for the serious player.",
+    price: "$179", oldPrice: null,
+    tag: null, tagText: null
+  }
+  /* ── PASTE NEW PRODUCTS BELOW (with a comma before each) ──
+  ,{
+    img: "https://images.unsplash.com/photo-XXXXX?w=700&q=80&auto=format&fit=crop",
+    fallback: "🖨️",
+    category: "Accessories",
+    name: "PrintMate Pro",
+    desc: "Wireless, whisper-quiet printing from any device.",
+    price: "$249", oldPrice: null,
+    tag: "new", tagText: "New"
+  }
+  ─────────────────────────────────────────────────────── */
+];
+
+/* ════════════════════════════════════════════════════
+   ✅ ADD NEW FEATURES — add a new object here.
+════════════════════════════════════════════════════ */
+const features = [
+  { icon: "🔒", name: "End-to-End Security",      body: "Military-grade encryption on every device. Your data belongs to you — period." },
+  { icon: "⚡", name: "Lightning Performance",     body: "Next-gen silicon delivers speeds that feel impossible. Zero compromise, maximum output." },
+  { icon: "🌿", name: "Built Sustainably",         body: "100% recycled aluminium. Carbon-neutral shipping. A commitment to the planet we share." },
+  { icon: "🎨", name: "Obsessive Design",          body: "Every curve, every radius, every surface — considered. Objects you'll want to touch." },
+  { icon: "🛡️", name: "3-Year Warranty",          body: "Full coverage, no questions asked. We build things to last, and we stand behind them." },
+  { icon: "🚀", name: "24-Hour Delivery",          body: "Order before midnight, delivered to your door by tomorrow. Fast, tracked, insured." }
+];
+
+/* ── Marquee ──────────────────────────────────────── */
+const marqueeText = ["Free Shipping Over $150","3-Year Warranty","New 2026 Collection","Carbon Neutral","24-Hour Delivery","Award-Winning Design"];
+const track = document.getElementById('marqueeTrack');
+[...marqueeText,...marqueeText,...marqueeText,...marqueeText].forEach(t => {
+  const s = document.createElement('span');
+  s.className = 'marquee-item';
+  s.textContent = t;
+  track.appendChild(s);
+});
+
+/* ── Products ────────────────────────────────────── */
+const grid = document.getElementById('productGrid');
+products.forEach(p => {
+  const el = document.createElement('div');
+  el.className = 'product-card';
+  el.innerHTML = `
+    <div class="card-img-wrap">
+      <img class="card-img" src="${p.img}" alt="${p.name}" loading="lazy"
+        onerror="this.parentElement.innerHTML='<div class=\\'card-img-fallback\\'>${p.fallback}</div>'">
+      ${p.tag ? `<div class="card-tag tag-${p.tag}">${p.tagText}</div>` : ''}
+    </div>
+    <div class="card-body">
+      <div class="card-cat">${p.category}</div>
+      <div class="card-name">${p.name}</div>
+      <div class="card-desc">${p.desc}</div>
+      <div class="card-footer">
+        <div class="price-wrap">
+          <span class="card-price">${p.price}</span>
+          ${p.oldPrice ? `<span class="card-price-old">${p.oldPrice}</span>` : ''}
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+    </div>`;
+  grid.appendChild(el);
+});
+
+/* ── Features ────────────────────────────────────── */
+const fg = document.getElementById('featuresGrid');
+features.forEach(f => {
+  fg.innerHTML += `
+    <div class="feature-card">
+      <div class="feature-icon">${f.icon}</div>
+      <div class="feature-name">${f.name}</div>
+      <div class="feature-body">${f.body}</div>
+    </div>`;
+});
+
+/* ── Scroll reveal ───────────────────────────────── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.06 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ── Custom cursor (desktop only) ───────────────── */
+if (window.matchMedia('(hover: hover)').matches) {
+  const cur = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = -100, my = -100, rx = -100, ry = -100;
+  window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function loop() {
+    rx += (mx - rx) * 0.14; ry += (my - ry) * 0.14;
+    cur.style.transform = `translate(${mx-4}px,${my-4}px)`;
+    ring.style.transform = `translate(${rx-18}px,${ry-18}px)`;
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('a,button,.product-card,.feature-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.style.width='60px'; ring.style.height='60px'; ring.style.opacity='0.5'; });
+    el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; ring.style.opacity='1'; });
+  });
+}
+</script>
+</body>
+</html>
